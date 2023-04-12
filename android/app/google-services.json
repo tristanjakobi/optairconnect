@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1032301852748",
+    "firebase_url": "https://optair-connect-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "optair-connect",
+    "storage_bucket": "optair-connect.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032301852748:android:6f48d075298c9c59c6dce9",
+        "android_client_info": {
+          "package_name": "com.example.optairconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032301852748-dcjbr1cqnm0t8m1rcf5v9pmsvmq6iklk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTzeOWMXCecVmXdiWw4SW_-O7AtgfhsHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032301852748-dcjbr1cqnm0t8m1rcf5v9pmsvmq6iklk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1032301852748-0mfgo8knjd6ufv8t9lriicbm87uhk77a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.optairconnect"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
