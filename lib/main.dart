@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:optairconnect/components/OptAirAppBar.dart';
 import 'package:optairconnect/pages/device.dart';
 import 'package:optairconnect/pages/devices.dart';
 import 'package:optairconnect/pages/login.dart';
@@ -32,7 +31,70 @@ class MaterialAppWithScaffold extends StatelessWidget {
     });
 
     return MaterialApp(
-        home: Scaffold(appBar: const OptAirAppBar(), body: body));
+        home: Scaffold(
+            appBar: AppBar(
+              actions: const [],
+              title: const Text("OptAir Connect"),
+            ),
+            body: body,
+            endDrawer: Drawer(
+              child: ListView(
+                // Important: Remove any padding from the ListView.
+                padding: EdgeInsets.zero,
+                children: [
+                  const UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(color: Colors.white),
+                    accountName: Text(
+                      "Pinkesh Darji",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    accountEmail: Text(
+                      "pinkesh.earth@gmail.com",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    currentAccountPicture: FlutterLogo(),
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.train,
+                    ),
+                    title: const Text('Dashboard'),
+                    onTap: () {
+                      context.go("/");
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.home,
+                    ),
+                    title: const Text('Devices'),
+                    onTap: () {
+                      context.go("/devices");
+                    },
+                  ),
+                  const AboutListTile(
+                    // <-- SEE HERE
+                    icon: Icon(
+                      Icons.info,
+                    ),
+                    applicationIcon: Icon(
+                      Icons.local_play,
+                    ),
+                    applicationName: 'My Cool App',
+                    applicationVersion: '1.0.25',
+                    applicationLegalese: '© 2019 Company',
+                    aboutBoxChildren: [
+                      ///Content goes here...
+                    ],
+                    child: Text('About app'),
+                  ),
+                ],
+              ),
+            )));
   }
 }
 
