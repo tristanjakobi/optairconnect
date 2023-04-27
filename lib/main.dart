@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:optairconnect/components/OptAirAppBar.dart';
 import 'package:optairconnect/pages/device.dart';
 import 'package:optairconnect/pages/devices.dart';
 import 'package:optairconnect/pages/login.dart';
@@ -31,12 +32,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
     });
 
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              actions: [FloatingActionButton(onPressed: () => {})],
-              title: const Text("OptAir Connect"),
-            ),
-            body: body));
+        home: Scaffold(appBar: const OptAirAppBar(), body: body));
   }
 }
 
