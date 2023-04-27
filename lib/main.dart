@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:optairconnect/pages/dashboard.dart';
 import 'package:optairconnect/pages/device.dart';
 import 'package:optairconnect/pages/devices.dart';
 import 'package:optairconnect/pages/login.dart';
@@ -64,7 +65,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
                     ),
                     title: const Text('Dashboard'),
                     onTap: () {
-                      context.go("/");
+                      context.go("/dashboard");
                     },
                   ),
                   ListTile(
@@ -84,12 +85,10 @@ class MaterialAppWithScaffold extends StatelessWidget {
                     applicationIcon: Icon(
                       Icons.local_play,
                     ),
-                    applicationName: 'My Cool App',
-                    applicationVersion: '1.0.25',
-                    applicationLegalese: '© 2019 Company',
-                    aboutBoxChildren: [
-                      ///Content goes here...
-                    ],
+                    applicationName: 'OptAir Connect',
+                    applicationVersion: '1.0.1',
+                    applicationLegalese: '2023 Gruenes Zuhause',
+                    aboutBoxChildren: [],
                     child: Text('About app'),
                   ),
                 ],
@@ -108,6 +107,11 @@ final _router = GoRouter(
       path: '/register',
       builder: (context, state) =>
           const MaterialAppWithScaffold(body: Register()),
+    ),
+    GoRoute(
+      path: '/dashboard',
+      builder: (context, state) =>
+          const MaterialAppWithScaffold(body: Dashboard()),
     ),
     GoRoute(
       path: '/devices',
