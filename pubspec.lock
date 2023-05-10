@@ -154,10 +154,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: "565738e46beb692622c0fad7419aabcc54d15693845049085948c76406da386f"
+      sha256: "676ae0d285e7c066b0400da7863aec1d14417b2f3858514b0e161d233c8495e2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.4"
+    version: "0.19.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -377,10 +377,10 @@ packages:
     dependency: transitive
     description:
       name: xml
-      sha256: a11fbb305f75dd200c96d3fd13f9fdb4bc8d8dcdb5331f6ba15c57acb950ef09
+      sha256: "4c4262c7dcf7b66fa8743cdfd37ccac03d6d50d3de4084b1a528de3107540752"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.0"
+    version: "4.5.1"
 sdks:
   dart: ">=2.19.3 <3.0.0"
   flutter: ">=3.3.0"

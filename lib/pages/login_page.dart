@@ -1,33 +1,42 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterState extends State<Register> {
+class _LoginPageState extends State<LoginPage> {
   var email = "";
   var password = "";
 
-  void register() async {
-    final User? user = (await _auth.createUserWithEmailAndPassword(
+  void login() async {
+    final User? user = (await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     ))
         .user;
     if (user != null) {
-      context.go('/devices');
+      context.go('/dashboard');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        context.go('/dashboard');
+      }
+    });
     return Card(
       child: Column(
         children: [
@@ -56,7 +65,7 @@ class _RegisterState extends State<Register> {
             ),
           ),
           ElevatedButton(
-              onPressed: () => {register()}, child: const Text("Login!"))
+              onPressed: () => {login()}, child: const Text("Login!"))
         ],
       ),
     );

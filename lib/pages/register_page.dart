@@ -1,26 +1,22 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginState extends State<Login> {
+class _RegisterPageState extends State<RegisterPage> {
   var email = "";
   var password = "";
 
-  void login() async {
-    final User? user = (await _auth.signInWithEmailAndPassword(
+  void register() async {
+    final User? user = (await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     ))
@@ -60,7 +56,7 @@ class _LoginState extends State<Login> {
             ),
           ),
           ElevatedButton(
-              onPressed: () => {login()}, child: const Text("Login!"))
+              onPressed: () => {register()}, child: const Text("Login!"))
         ],
       ),
     );

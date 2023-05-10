@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:optairconnect/pages/dashboard.dart';
-import 'package:optairconnect/pages/device.dart';
-import 'package:optairconnect/pages/devices.dart';
-import 'package:optairconnect/pages/login.dart';
-import 'package:optairconnect/pages/register.dart';
-import 'package:optairconnect/pages/userpage.dart';
-import 'package:optairconnect/pages/users.dart';
+import 'package:optairconnect/pages/dashboard_page.dart';
+import 'package:optairconnect/pages/device_page.dart';
+import 'package:optairconnect/pages/devices_page.dart';
+import 'package:optairconnect/pages/login_page.dart';
+import 'package:optairconnect/pages/register_page.dart';
+import 'package:optairconnect/pages/user_page.dart';
+import 'package:optairconnect/pages/users_page.dart';
 import 'firebase_options.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(App());
@@ -26,17 +27,54 @@ class MaterialAppWithScaffold extends StatelessWidget {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         context.go('/');
-      } else {
-        context.go('/devices');
       }
     });
 
     return MaterialApp(
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          colorScheme: const ColorScheme.light(
+            background: Colors.white,
+            primary: Color.fromRGBO(24, 144, 255, 100.0),
+            secondary: Color.fromRGBO(255, 24, 24, 100.0),
+            tertiary: Color.fromRGBO(114, 46, 209, 100.0),
+            shadow: Color.fromRGBO(26, 26, 26, 100),
+          ),
+          textTheme: const TextTheme(
+            titleLarge: TextStyle(
+              fontSize: 47.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(26, 26, 26, 100),
+            ),
+            titleMedium: TextStyle(
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            bodyMedium: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(26, 26, 26, 100),
+            ),
+            bodySmall: TextStyle(
+              fontSize: 16.0,
+              color: Color.fromRGBO(26, 26, 26, 100),
+            ),
+          ),
+        ),
         home: Scaffold(
             appBar: AppBar(
-              actions: const [],
-              title: const Text("OptAir Connect"),
-            ),
+                toolbarHeight: 100.0,
+                actions: const [],
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leadingWidth: 100,
+                leading: IconButton(
+                  icon: Image.asset("assets/logo.png"),
+                  onPressed: () {
+                    print('Button pressed!');
+                  },
+                )),
             body: body,
             endDrawer: Drawer(
               child: ListView(
@@ -77,19 +115,17 @@ class MaterialAppWithScaffold extends StatelessWidget {
                       context.go("/devices");
                     },
                   ),
-                  const AboutListTile(
+                  AboutListTile(
                     // <-- SEE HERE
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.info,
                     ),
-                    applicationIcon: Icon(
-                      Icons.local_play,
-                    ),
+                    applicationIcon: Image.asset("assets/bars.png"),
                     applicationName: 'OptAir Connect',
                     applicationVersion: '1.0.1',
                     applicationLegalese: '2023 Gruenes Zuhause',
                     aboutBoxChildren: [],
-                    child: Text('About app'),
+                    child: const Text('About app'),
                   ),
                 ],
               ),
@@ -101,31 +137,33 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const MaterialAppWithScaffold(body: Login()),
+      builder: (context, state) =>
+          const MaterialAppWithScaffold(body: LoginPage()),
     ),
     GoRoute(
       path: '/register',
       builder: (context, state) =>
-          const MaterialAppWithScaffold(body: Register()),
+          const MaterialAppWithScaffold(body: RegisterPage()),
     ),
     GoRoute(
       path: '/dashboard',
       builder: (context, state) =>
-          const MaterialAppWithScaffold(body: Dashboard()),
+          MaterialAppWithScaffold(body: DashboardPage()),
     ),
     GoRoute(
       path: '/devices',
       builder: (context, state) =>
-          const MaterialAppWithScaffold(body: Devices()),
+          const MaterialAppWithScaffold(body: DevicesPage()),
     ),
     GoRoute(
       path: '/device',
       builder: (context, state) =>
-          const MaterialAppWithScaffold(body: Device()),
+          const MaterialAppWithScaffold(body: DevicePage()),
     ),
     GoRoute(
       path: '/admin/users',
-      builder: (context, state) => const MaterialAppWithScaffold(body: Users()),
+      builder: (context, state) =>
+          const MaterialAppWithScaffold(body: UsersPage()),
     ),
     GoRoute(
       path: '/admin/user',

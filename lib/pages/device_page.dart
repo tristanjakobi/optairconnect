@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class DevicePage extends StatelessWidget {
+  const DevicePage({super.key});
 
   @override
   Widget build(BuildContext context) {
