@@ -3,7 +3,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class OptAirEntry extends StatelessWidget {
-  const OptAirEntry({super.key});
+  final Widget child;
+
+  const OptAirEntry({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -11,38 +13,15 @@ class OptAirEntry extends StatelessWidget {
         width: double.infinity,
         child: Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(3.0),
             side: const BorderSide(color: Colors.grey),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(1),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Table(
-                  columnWidths: const {
-                    0: FlexColumnWidth(1),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: const [
-                    TableRow(children: [
-                      Text('Gerät'),
-                      Text('Device 1'),
-                    ]),
-                    TableRow(children: [
-                      Text('°C'),
-                      Text('22°C'),
-                    ]),
-                    TableRow(children: [
-                      Text('Brand'),
-                      Icon(Icons.branding_watermark), // replace with your icon
-                    ]),
-                    TableRow(children: [
-                      Text('Verbindung'),
-                      Icon(Icons.link), // replace with your icon
-                    ]),
-                  ],
-                ),
+                child,
                 IconButton(
                   icon: const Icon(Icons.more_vert), // replace with your icon
                   onPressed: () {},

@@ -65,7 +65,16 @@ class MaterialAppWithScaffold extends StatelessWidget {
         home: Scaffold(
             appBar: AppBar(
                 toolbarHeight: 100.0,
-                actions: const [],
+                actions: [
+                  Builder(
+                    builder: (context) => IconButton(
+                      icon: Icon(Icons.filter),
+                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                      tooltip: MaterialLocalizations.of(context)
+                          .openAppDrawerTooltip,
+                    ),
+                  ),
+                ],
                 backgroundColor: Colors.white,
                 elevation: 0,
                 leadingWidth: 100,
@@ -120,7 +129,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
                     icon: const Icon(
                       Icons.info,
                     ),
-                    applicationIcon: Image.asset("assets/bars.png"),
+                    applicationIcon: Image.asset("assets/logo.png"),
                     applicationName: 'OptAir Connect',
                     applicationVersion: '1.0.1',
                     applicationLegalese: '2023 Gruenes Zuhause',
