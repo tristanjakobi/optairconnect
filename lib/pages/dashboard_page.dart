@@ -26,12 +26,12 @@ class _DashboardPageState extends State<DashboardPage> {
         children: [
           Expanded(
               child: Padding(
-                  padding: EdgeInsets.only(bottom: 60),
+                  padding: const EdgeInsets.only(bottom: 60),
                   child: _DeviceTable(widget._dashboardController))),
           Positioned(
             bottom: 5,
-            left: 20,
-            right: 20,
+            left: 0,
+            right: 0,
             child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.tertiary,
@@ -49,7 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         );
                       });
                 },
-                child: Text("Hinzufügen")),
+                child: const Text("Hinzufügen")),
           )
         ],
       ),
@@ -186,7 +186,7 @@ class _FormState extends State<_Form> {
                       widget._refreshList();
                     }
                   },
-                  child: Text('Add Device'),
+                  child: const Text('Add Device'),
                 )),
           ],
         ),
