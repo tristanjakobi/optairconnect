@@ -32,7 +32,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
 
     return MaterialApp(
         theme: ThemeData(
-          scaffoldBackgroundColor: Color.fromARGB(255, 249, 249, 249),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 249, 249, 249),
           colorScheme: const ColorScheme.light(
             background: Colors.white,
             primary: Color.fromRGBO(24, 144, 255, 100.0),
@@ -44,6 +44,11 @@ class MaterialAppWithScaffold extends StatelessWidget {
             titleLarge: TextStyle(
               fontSize: 47.0,
               fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(26, 26, 26, 100),
+            ),
+            titleSmall: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
               color: Color.fromRGBO(26, 26, 26, 100),
             ),
             titleMedium: TextStyle(
@@ -68,6 +73,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
                 actions: [
                   Builder(
                     builder: (context) => IconButton(
+                      padding: const EdgeInsets.all(15),
                       icon: Image.asset("assets/bars.png"),
                       onPressed: () => Scaffold.of(context).openEndDrawer(),
                       tooltip: MaterialLocalizations.of(context)
@@ -75,7 +81,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
                     ),
                   ),
                 ],
-                backgroundColor: Color.fromARGB(255, 249, 249, 249),
+                backgroundColor: const Color.fromARGB(0, 249, 249, 249),
                 elevation: 0,
                 leadingWidth: 100,
                 leading: IconButton(
@@ -122,6 +128,15 @@ class MaterialAppWithScaffold extends StatelessWidget {
                     title: const Text('Account'),
                     onTap: () {
                       context.go("/Account");
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.home,
+                    ),
+                    title: const Text('Logout'),
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
                     },
                   ),
                   AboutListTile(

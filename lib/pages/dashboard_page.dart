@@ -75,7 +75,8 @@ class _DeviceTable extends StatelessWidget {
           } else {
             final devices = snapshot.data!;
             return DataTable(
-                columnSpacing: 20,
+                horizontalMargin: 0,
+                columnSpacing: 10,
                 columns: _createDeviceTableColumn(context),
                 rows: _createDeviceTableRows(context, devices));
           }
