@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   var email = "";
   var password = "";
+  bool registering = false;
 
   void login() async {
     final User? user = (await _auth.signInWithEmailAndPassword(
@@ -45,100 +46,190 @@ class _LoginPageState extends State<LoginPage> {
           end: Alignment.bottomCenter,
           colors: [
             Color.fromARGB(255, 249, 249, 249),
-            Color.fromRGBO(163, 211, 255, 0.612),
+            Color.fromRGBO(195, 226, 255, 0.612),
           ],
         )),
       ),
-      Card(
-        color: Colors.transparent,
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        child: Column(
-          children: [
-            Text("Anmelden", style: Theme.of(context).textTheme.titleLarge),
-            Text("Anmelden um die Geräte zu verwalten",
-                style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text("Email"),
-                  TextField(
-                    style: Theme.of(context).textTheme.bodySmall,
-                    autofocus: true,
-                    onChanged: (value) => {
-                      setState(() {
-                        email = value;
-                      })
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text("Password"),
-                  TextField(
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    style: Theme.of(context).textTheme.bodySmall,
-                    autofocus: true,
-                    onChanged: (value) => {
-                      setState(() {
-                        password = value;
-                      })
-                    },
-                  ),
-                ],
+      if (registering)
+        const RegisterPage()
+      else
+        Card(
+          color: Colors.transparent,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          child: Column(
+            children: [
+              Text("Anmelden", style: Theme.of(context).textTheme.titleLarge),
+              Text("Anmelden um die Geräte zu verwalten",
+                  style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    shadowColor: Theme.of(context).colorScheme.shadow,
-                    minimumSize: const Size(150, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+              Padding(
+                padding: const EdgeInsets.all(25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text("Email"),
+                    TextField(
+                      style: Theme.of(context).textTheme.bodySmall,
+                      autofocus: true,
+                      onChanged: (value) => {
+                        setState(() {
+                          email = value;
+                        })
+                      },
                     ),
-                  ),
-                  onPressed: () => {login()},
-                  child: const Text("Login")),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(150, 50),
-                    foregroundColor: Theme.of(context).colorScheme.tertiary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  onPressed: () => {login()},
-                  child: const Text("Register")),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(150, 50),
-                    foregroundColor: Theme.of(context).colorScheme.secondary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
+                    const Text("Password"),
+                    TextField(
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      style: Theme.of(context).textTheme.bodySmall,
+                      autofocus: true,
+                      onChanged: (value) => {
+                        setState(() {
+                          password = value;
+                        })
+                      },
                     ),
-                  ),
-                  onPressed: () => {login()},
-                  child: const Text("Forgot Password")),
-            ),
-          ],
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      shadowColor: Theme.of(context).colorScheme.shadow,
+                      minimumSize: const Size(150, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                    onPressed: () => {login()},
+                    child: const Text("Login")),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(150, 50),
+                      foregroundColor: Theme.of(context).colorScheme.tertiary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                    onPressed: () => {setState(() => registering = true)},
+                    child: const Text("Register")),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(150, 50),
+                      foregroundColor: Theme.of(context).colorScheme.secondary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                    onPressed: () => {login()},
+                    child: const Text("Forgot Password")),
+              ),
+            ],
+          ),
         ),
-      ),
     ]);
+  }
+}
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  var email = "";
+  var password = "";
+
+  void register() async {
+    final User? user = (await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    ))
+        .user;
+    if (user != null) {
+      context.go('/devices');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          Text("Registrieren", style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text("Email"),
+                TextField(
+                  style: Theme.of(context).textTheme.bodySmall,
+                  autofocus: true,
+                  onChanged: (value) => {
+                    setState(() {
+                      email = value;
+                    })
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text("Password"),
+                TextField(
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  autofocus: true,
+                  onChanged: (value) => {
+                    setState(() {
+                      password = value;
+                    })
+                  },
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  shadowColor: Theme.of(context).colorScheme.shadow,
+                  minimumSize: const Size(150, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.0),
+                  ),
+                ),
+                onPressed: () => {register()},
+                child: const Text("Register!")),
+          ),
+        ],
+      ),
+    );
   }
 }

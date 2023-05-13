@@ -1,26 +1,33 @@
 class Device {
   final int id;
+  final int userId;
   final String title;
   final int degrees;
-  final bool burning;
-  final bool connection;
+  final int status;
+  final int humidity;
+  final int airQuality;
 
-  Device(this.id, this.title, this.degrees, this.burning, this.connection);
+  Device(this.id, this.userId, this.title, this.degrees, this.status,
+      this.humidity, this.airQuality);
 
   Device.fromMap(Map<String, dynamic> data)
       : id = data['id'],
+        userId = data['userId'],
         title = data['title'],
         degrees = data['degrees'],
-        burning = data['burning'],
-        connection = data['connection'];
+        humidity = data['humidity'],
+        airQuality = data['airQuality'],
+        status = data['status'];
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'userId': userId,
       'title': title,
       'degrees': degrees,
-      'burning': burning,
-      'connection': connection
+      'humidity': humidity,
+      'air_quality': airQuality,
+      'status': status
     };
   }
 }

@@ -5,9 +5,7 @@ import 'package:optairconnect/pages/dashboard_page.dart';
 import 'package:optairconnect/pages/device_page.dart';
 import 'package:optairconnect/pages/devices_page.dart';
 import 'package:optairconnect/pages/login_page.dart';
-import 'package:optairconnect/pages/register_page.dart';
 import 'package:optairconnect/pages/user_page.dart';
-import 'package:optairconnect/pages/users_page.dart';
 import 'firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -71,15 +69,7 @@ class MaterialAppWithScaffold extends StatelessWidget {
             appBar: AppBar(
                 toolbarHeight: 100.0,
                 actions: [
-                  Builder(
-                    builder: (context) => IconButton(
-                      padding: const EdgeInsets.all(15),
-                      icon: Image.asset("assets/bars.png"),
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
-                      tooltip: MaterialLocalizations.of(context)
-                          .openAppDrawerTooltip,
-                    ),
-                  ),
+                  Builder(builder: (context) => const OptAirDrawerIcon()),
                 ],
                 backgroundColor: const Color.fromARGB(0, 249, 249, 249),
                 elevation: 0,
@@ -157,6 +147,23 @@ class MaterialAppWithScaffold extends StatelessWidget {
   }
 }
 
+class OptAirDrawerIcon extends StatelessWidget {
+  const OptAirDrawerIcon({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final router = GoRouter.of(context);
+    if (router.location != "/") {
+      return IconButton(
+        padding: const EdgeInsets.all(15),
+        icon: Image.asset("assets/bars.png"),
+        onPressed: () => Scaffold.of(context).openEndDrawer(),
+        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      );
+    }
+    return const Text("");
+  }
+}
+
 final _router = GoRouter(
   routes: [
     GoRoute(
@@ -165,29 +172,16 @@ final _router = GoRouter(
           const MaterialAppWithScaffold(body: LoginPage()),
     ),
     GoRoute(
-      path: '/register',
-      builder: (context, state) =>
-          const MaterialAppWithScaffold(body: RegisterPage()),
-    ),
-    GoRoute(
       path: '/dashboard',
       builder: (context, state) =>
           MaterialAppWithScaffold(body: DashboardPage()),
     ),
     GoRoute(
-      path: '/devices',
-      builder: (context, state) =>
-          const MaterialAppWithScaffold(body: DevicesPage()),
-    ),
-    GoRoute(
-      path: '/device',
-      builder: (context, state) =>
-          const MaterialAppWithScaffold(body: DevicePage()),
-    ),
-    GoRoute(
-      path: '/admin/users',
-      builder: (context, state) =>
-          const MaterialAppWithScaffold(body: UsersPage()),
+      path: '/device/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = state.params['id']!;
+        return MaterialAppWithScaffold(body: DevicePage(id: id));
+      },
     ),
     GoRoute(
       path: '/account',

@@ -42,6 +42,7 @@ dependencies:
   syncfusion_flutter_charts: ^21.1.41
   flutter_svg: ^0.19.3
   flutter_launcher_icons: ^0.8.1
+  firebase_database: ^10.2.0
 
 
 flutter_launcher_icons:

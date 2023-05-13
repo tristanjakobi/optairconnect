@@ -64,9 +64,18 @@ class _DeviceTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _dashboardController.addDevice(Device(1, 'Wohnzimmer', 20, false, true));
-    _dashboardController.addDevice(Device(2, 'Schlafzimmer', 18, false, true));
-    _dashboardController.addDevice(Device(3, 'Schlafzimmer', 26, true, true));
+    _dashboardController.addDevice(Device(1, 0, 'Wohnzimmer', 20, 0, 100, 100));
+    _dashboardController
+        .addDevice(Device(2, 0, 'Schlafzimmer', 18, 0, 100, 100));
+    _dashboardController
+        .addDevice(Device(3, 0, 'Schlafzimmer', 26, 0, 100, 100));
+    double width = MediaQuery.of(context).size.width;
+
+    int items = 3;
+    if (width > 600) {
+      items = 5;
+    }
+
     return FutureBuilder<List<Device>>(
         future: _dashboardController.getAllDevices(),
         builder: (context, snapshot) {
@@ -74,30 +83,79 @@ class _DeviceTable extends StatelessWidget {
             return const Center(child: Text('Loading..'));
           } else {
             final devices = snapshot.data!;
-            return DataTable(
-                horizontalMargin: 0,
-                columnSpacing: 10,
-                columns: _createDeviceTableColumn(context),
-                rows: _createDeviceTableRows(context, devices));
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: DataTable(
+                  horizontalMargin: 0,
+                  columnSpacing: 50,
+                  columns: _createDeviceTableColumn(context, items),
+                  rows: _createDeviceTableRows(context, devices, items)),
+            );
           }
         });
   }
 
-  List<DataColumn> _createDeviceTableColumn(context) {
+  List<DataColumn> _createDeviceTableColumn(context, items) {
+    if (items == 5) {
+      return [
+        DataColumn(
+            label:
+                Text('Gerät', style: Theme.of(context).textTheme.bodyMedium)),
+        DataColumn(
+            label: Text('Luftqualität',
+                style: Theme.of(context).textTheme.bodyMedium)),
+        DataColumn(
+            label: Text('Temperatur',
+                style: Theme.of(context).textTheme.bodyMedium)),
+        DataColumn(
+            label: Text('Luftfeuchtigkeit',
+                style: Theme.of(context).textTheme.bodyMedium)),
+        DataColumn(
+            label:
+                Text('Brand', style: Theme.of(context).textTheme.bodyMedium)),
+      ];
+    }
     return [
       DataColumn(
           label: Text('Gerät', style: Theme.of(context).textTheme.bodyMedium)),
       DataColumn(
-          label: Text('°C', style: Theme.of(context).textTheme.bodyMedium)),
+          label: Text('Temperatur',
+              style: Theme.of(context).textTheme.bodyMedium)),
       DataColumn(
           label: Text('Brand', style: Theme.of(context).textTheme.bodyMedium)),
-      DataColumn(
-          label: Text('Verbindung',
-              style: Theme.of(context).textTheme.bodyMedium)),
     ];
   }
 
-  List<DataRow> _createDeviceTableRows(context, List<Device> devices) {
+  List<DataRow> _createDeviceTableRows(context, List<Device> devices, items) {
+    if (items == 5) {
+      return devices
+          .map((device) => DataRow(cells: [
+                DataCell(Text(device.title.toString(),
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(Text("${device.airQuality}%",
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(Text("${device.degrees}°C",
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(Text("${device.humidity}%",
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(
+                  IconButton(
+                    icon: Image.asset(() {
+                      switch (device.status) {
+                        case 1:
+                          return 'assets/fire.png';
+                        case 2:
+                          return 'assets/error.png';
+                        default:
+                          return 'assets/circle.png';
+                      }
+                    }()),
+                    onPressed: () {},
+                  ),
+                ),
+              ]))
+          .toList();
+    }
     return devices
         .map((device) => DataRow(cells: [
               DataCell(Text(device.title.toString(),
@@ -108,28 +166,19 @@ class _DeviceTable extends StatelessWidget {
                 Center(
                   child: IconButton(
                     icon: Image.asset(() {
-                      if (device.burning) {
-                        return 'assets/fire.png';
-                      } else {
-                        return 'assets/circle.png';
+                      switch (device.status) {
+                        case 1:
+                          return 'assets/fire.png';
+                        case 2:
+                          return 'assets/error.png';
+                        default:
+                          return 'assets/circle.png';
                       }
                     }()),
                     onPressed: () {},
                   ),
                 ),
               ),
-              DataCell(Center(
-                child: IconButton(
-                  icon: Image.asset(() {
-                    if (device.connection) {
-                      return 'assets/circle.png';
-                    } else {
-                      return 'assets/circle.png';
-                    }
-                  }()),
-                  onPressed: () {},
-                ),
-              )),
             ]))
         .toList();
   }
@@ -182,7 +231,7 @@ class _FormState extends State<_Form> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       await widget._dashboardController.addDevice(Device(
-                          0, _titleFieldController.text, 0, false, false));
+                          0, 0, _titleFieldController.text, 100, 1, 100, 100));
                       _titleFieldController.clear();
                       widget._refreshList();
                     }
