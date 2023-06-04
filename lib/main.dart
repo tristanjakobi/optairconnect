@@ -1,20 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:optairconnect/pages/dashboard_page.dart';
 import 'package:optairconnect/pages/device_page.dart';
-import 'package:optairconnect/pages/devices_page.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:optairconnect/pages/login_page.dart';
 import 'package:optairconnect/pages/user_page.dart';
 import 'firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('notification_icon');
 
 void main() {
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(App());
 }
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 class MaterialAppWithScaffold extends StatelessWidget {
   const MaterialAppWithScaffold({super.key, this.body});
@@ -115,15 +129,6 @@ class MaterialAppWithScaffold extends StatelessWidget {
                     leading: const Icon(
                       Icons.home,
                     ),
-                    title: const Text('Account'),
-                    onTap: () {
-                      context.go("/Account");
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.home,
-                    ),
                     title: const Text('Logout'),
                     onTap: () async {
                       await FirebaseAuth.instance.signOut();
@@ -179,7 +184,7 @@ final _router = GoRouter(
     GoRoute(
       path: '/device/:id',
       builder: (BuildContext context, GoRouterState state) {
-        final id = state.params['id']!;
+        final id = state.pathParameters['id']!;
         return MaterialAppWithScaffold(body: DevicePage(id: id));
       },
     ),
@@ -197,6 +202,40 @@ class App extends StatelessWidget {
       future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform),
       builder: (context, snapshot) {
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+          const AndroidNotificationChannel channel = AndroidNotificationChannel(
+            'high_importance_channel', // id
+            'High Importance Notifications', // title
+            importance: Importance.max,
+          );
+
+          RemoteNotification? notification = message.notification;
+          AndroidNotification? android = message.notification?.android;
+
+          // If `onMessage` is triggered with a notification, construct our own
+          // local notification to show to users using the created channel.
+          if (notification != null && android != null) {
+            flutterLocalNotificationsPlugin.initialize(
+              const InitializationSettings(
+                  android: initializationSettingsAndroid),
+            );
+
+            flutterLocalNotificationsPlugin.show(
+                notification.hashCode,
+                notification.title,
+                notification.body,
+                NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    icon: android.smallIcon,
+                    // other properties...
+                  ),
+                ));
+          }
+        });
+
+        askPermission();
         if (snapshot.hasError) {
           return const MaterialApp(title: "Error");
         }
@@ -209,5 +248,18 @@ class App extends StatelessWidget {
         return const MaterialApp(title: "Loading");
       },
     );
+  }
+
+  void askPermission() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: false,
+      criticalAlert: true,
+      provisional: true,
+      sound: true,
+    );
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 }

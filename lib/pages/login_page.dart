@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -31,10 +33,19 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void pushFCMToken(String uid) async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final tokenReference =
+        FirebaseDatabase.instance.reference().child('FCMTokens/$uid');
+    tokenReference.set(fcmToken);
+  }
+
   @override
   Widget build(BuildContext context) {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
+        pushFCMToken(user.uid);
+
         context.go('/dashboard');
       }
     });
@@ -125,20 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     onPressed: () => {setState(() => registering = true)},
-                    child: const Text("Register")),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(150, 50),
-                      foregroundColor: Theme.of(context).colorScheme.secondary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                    onPressed: () => {login()},
-                    child: const Text("Forgot Password")),
+                    child: const Text("Registrieren")),
               ),
             ],
           ),
@@ -197,7 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text("Password"),
+                const Text("Passwort"),
                 TextField(
                   obscureText: true,
                   enableSuggestions: false,

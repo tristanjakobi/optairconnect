@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:optairconnect/controllers/dashboard_controller.dart';
@@ -18,39 +20,30 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {});
   }
 
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer =
+        Timer.periodic(const Duration(seconds: 5), (Timer t) => _refreshList());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return OptAirWrapper(
       title: 'Dashboard',
       body: Stack(
         children: [
-          Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.only(bottom: 60),
-                  child: _DeviceTable(widget._dashboardController))),
-          Positioned(
-            bottom: 5,
-            left: 0,
-            right: 0,
-            child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.tertiary,
-                ),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: Stack(
-                            children: <Widget>[
-                              _Form(widget._dashboardController, _refreshList),
-                            ],
-                          ),
-                        );
-                      });
-                },
-                child: const Text("Hinzufügen")),
-          )
+          Padding(
+              padding: const EdgeInsets.only(bottom: 60),
+              child: _DeviceTable(widget._dashboardController)),
         ],
       ),
     );
@@ -64,11 +57,6 @@ class _DeviceTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _dashboardController.addDevice(Device(1, 0, 'Wohnzimmer', 20, 0, 100, 100));
-    _dashboardController
-        .addDevice(Device(2, 0, 'Schlafzimmer', 18, 0, 100, 100));
-    _dashboardController
-        .addDevice(Device(3, 0, 'Schlafzimmer', 26, 0, 100, 100));
     double width = MediaQuery.of(context).size.width;
 
     int items = 3;
@@ -86,6 +74,7 @@ class _DeviceTable extends StatelessWidget {
             return SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(
+                  showCheckboxColumn: false,
                   horizontalMargin: 0,
                   columnSpacing: 50,
                   columns: _createDeviceTableColumn(context, items),
@@ -112,7 +101,7 @@ class _DeviceTable extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium)),
         DataColumn(
             label:
-                Text('Brand', style: Theme.of(context).textTheme.bodyMedium)),
+                Text('Status', style: Theme.of(context).textTheme.bodyMedium)),
       ];
     }
     return [
@@ -122,45 +111,52 @@ class _DeviceTable extends StatelessWidget {
           label: Text('Temperatur',
               style: Theme.of(context).textTheme.bodyMedium)),
       DataColumn(
-          label: Text('Brand', style: Theme.of(context).textTheme.bodyMedium)),
+          label: Text('Status', style: Theme.of(context).textTheme.bodyMedium)),
     ];
   }
 
   List<DataRow> _createDeviceTableRows(context, List<Device> devices, items) {
     if (items == 5) {
       return devices
-          .map((device) => DataRow(cells: [
-                DataCell(Text(device.title.toString(),
-                    style: Theme.of(context).textTheme.bodySmall)),
-                DataCell(Text("${device.airQuality}%",
-                    style: Theme.of(context).textTheme.bodySmall)),
-                DataCell(Text("${device.degrees}°C",
-                    style: Theme.of(context).textTheme.bodySmall)),
-                DataCell(Text("${device.humidity}%",
-                    style: Theme.of(context).textTheme.bodySmall)),
-                DataCell(
-                  IconButton(
-                    icon: Image.asset(() {
-                      switch (device.status) {
-                        case 1:
-                          return 'assets/fire.png';
-                        case 2:
-                          return 'assets/error.png';
-                        default:
-                          return 'assets/circle.png';
-                      }
-                    }()),
-                    onPressed: () {},
-                  ),
-                ),
-              ]))
+          .map((device) => DataRow(
+                  onSelectChanged: (newValue) {
+                    print("ye");
+                    context.go(
+                      '/device/${device.id}',
+                    );
+                  },
+                  cells: [
+                    DataCell(Text(device.title.toString(),
+                        style: Theme.of(context).textTheme.bodySmall)),
+                    DataCell(Text("${device.airQuality}%",
+                        style: Theme.of(context).textTheme.bodySmall)),
+                    DataCell(Text("${device.degrees}°C",
+                        style: Theme.of(context).textTheme.bodySmall)),
+                    DataCell(Text("${device.humidity}%",
+                        style: Theme.of(context).textTheme.bodySmall)),
+                    DataCell(
+                      IconButton(
+                        icon: Image.asset(() {
+                          switch (device.status) {
+                            case 1:
+                              return 'assets/fire.png';
+                            case 2:
+                              return 'assets/error.png';
+                            default:
+                              return 'assets/circle.png';
+                          }
+                        }()),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ]))
           .toList();
     }
     return devices
         .map((device) => DataRow(cells: [
               DataCell(Text(device.title.toString(),
                   style: Theme.of(context).textTheme.bodySmall)),
-              DataCell(Text(device.degrees.toString(),
+              DataCell(Text("${device.degrees}°C",
                   style: Theme.of(context).textTheme.bodySmall)),
               DataCell(
                 Center(
@@ -181,66 +177,5 @@ class _DeviceTable extends StatelessWidget {
               ),
             ]))
         .toList();
-  }
-}
-
-class _Form extends StatefulWidget {
-  final DashboardController _dashboardController;
-  final VoidCallback _refreshList;
-
-  _Form(this._dashboardController, this._refreshList);
-
-  @override
-  _FormState createState() => _FormState();
-}
-
-class _FormState extends State<_Form> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleFieldController = TextEditingController();
-
-  @override
-  void dispose() {
-    _titleFieldController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              controller: _titleFieldController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Device title';
-                }
-                return null;
-              },
-            ),
-            Container(
-                margin: const EdgeInsets.only(top: 10.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await widget._dashboardController.addDevice(Device(
-                          0, 0, _titleFieldController.text, 100, 1, 100, 100));
-                      _titleFieldController.clear();
-                      widget._refreshList();
-                    }
-                  },
-                  child: const Text('Add Device'),
-                )),
-          ],
-        ),
-      ),
-    );
   }
 }

@@ -4,15 +4,25 @@ import '../db/mock_db.dart';
 import '../models/device_model.dart';
 
 class DeviceRepository implements IDeviceRepository {
-  final VirtualDB _db;
-
-  DeviceRepository(this._db);
-  DatabaseReference ref = FirebaseDatabase.instance.ref("device/");
-
   @override
   Future<List<Device>> getAll() async {
-    var items = await _db.list();
-    return items.map((item) => Device.fromMap(item)).toList();
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('device/').get();
+    if (snapshot.exists) {
+      List<Device> devices = [];
+      List<dynamic> values = snapshot.value as List<dynamic>;
+      values.forEach((element) {
+        try {
+          devices.add(Device.fromMap(Map<String, dynamic>.from(element)));
+        } catch (e) {
+          print(e);
+        }
+      });
+
+      return devices;
+    } else {
+      return [];
+    }
   }
 
   @override
@@ -21,26 +31,28 @@ class DeviceRepository implements IDeviceRepository {
     final snapshot = await ref.child('device/$id').get();
     if (snapshot.exists) {
       print(snapshot.value);
+      Map<String, dynamic> values = snapshot.value as Map<String, dynamic>;
+      print(values);
+      return Device.fromMap(values);
     } else {
       print('No data available.');
     }
-
-    var item = await _db.findOne(id);
-    return item != null ? Device.fromMap(item) : null;
   }
 
   @override
   Future<void> insert(Device device) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('device/${device.id}');
     await ref.set(device.toMap());
   }
 
   @override
   Future<void> update(Device device) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('device/${device.id}');
     await ref.update(device.toMap());
   }
 
   @override
-  Future<void> delete(int id) async {
-    await _db.remove(id);
-  }
+  Future<void> delete(int id) async {}
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:optairconnect/controllers/device_controller.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -19,6 +21,21 @@ class DevicePage extends StatefulWidget {
 class _DevicePageState extends State<DevicePage> {
   void _refreshList() {
     setState(() {});
+  }
+
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer =
+        Timer.periodic(const Duration(seconds: 5), (Timer t) => _refreshList());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
