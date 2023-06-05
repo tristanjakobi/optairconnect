@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:optairconnect/repositories/device_interface.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../db/mock_db.dart';
@@ -29,13 +30,15 @@ class DeviceRepository implements IDeviceRepository {
   Future<Device?> getOne(int id) async {
     final ref = FirebaseDatabase.instance.ref();
     final snapshot = await ref.child('device/$id').get();
+
     if (snapshot.exists) {
-      print(snapshot.value);
-      Map<String, dynamic> values = snapshot.value as Map<String, dynamic>;
-      print(values);
+      final values = Map<String, dynamic>.from(snapshot.value
+          as Map<dynamic, dynamic>); // Convert to Map<String, dynamic>
+
       return Device.fromMap(values);
     } else {
       print('No data available.');
+      return null;
     }
   }
 

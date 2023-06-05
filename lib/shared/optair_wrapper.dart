@@ -8,7 +8,8 @@ class OptAirWrapper extends StatelessWidget {
   final Widget body;
 
   const OptAirWrapper(
-      {required this.title,
+      {super.key,
+      required this.title,
       this.buttonText = '',
       this.onPressed,
       required this.body});
@@ -16,9 +17,10 @@ class OptAirWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.all(15.0),
-        child: Expanded(
-          child: SingleChildScrollView(
+      margin: const EdgeInsets.all(15.0),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -39,7 +41,8 @@ class OptAirWrapper extends StatelessWidget {
                           backgroundColor:
                               Theme.of(context).primaryColor, // Text color
                         ),
-                        onPressed: onPressed!(),
+                        onPressed:
+                            onPressed as void Function()?, // fix this line
                         child: Text(buttonText),
                       ),
                   ],
@@ -60,6 +63,8 @@ class OptAirWrapper extends StatelessWidget {
               ],
             ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:optairconnect/controllers/dashboard_controller.dart';
 import 'package:optairconnect/shared/optair_wrapper.dart';
-
+import 'package:go_router/go_router.dart';
 import '../models/device_model.dart';
 import '../shared/optair_entry.dart';
 
@@ -118,44 +118,40 @@ class _DeviceTable extends StatelessWidget {
   List<DataRow> _createDeviceTableRows(context, List<Device> devices, items) {
     if (items == 5) {
       return devices
-          .map((device) => DataRow(
-                  onSelectChanged: (newValue) {
-                    print("ye");
-                    context.go(
-                      '/device/${device.id}',
-                    );
-                  },
-                  cells: [
-                    DataCell(Text(device.title.toString(),
-                        style: Theme.of(context).textTheme.bodySmall)),
-                    DataCell(Text("${device.airQuality}%",
-                        style: Theme.of(context).textTheme.bodySmall)),
-                    DataCell(Text("${device.degrees}°C",
-                        style: Theme.of(context).textTheme.bodySmall)),
-                    DataCell(Text("${device.humidity}%",
-                        style: Theme.of(context).textTheme.bodySmall)),
-                    DataCell(
-                      IconButton(
-                        icon: Image.asset(() {
-                          switch (device.status) {
-                            case 1:
-                              return 'assets/fire.png';
-                            case 2:
-                              return 'assets/error.png';
-                            default:
-                              return 'assets/circle.png';
-                          }
-                        }()),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ]))
+          .map((device) => DataRow(cells: [
+                DataCell(Text(device.title.toString(),
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(Text("${device.airQuality}%",
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(Text("${device.degrees}°C",
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(Text("${device.humidity}%",
+                    style: Theme.of(context).textTheme.bodySmall)),
+                DataCell(
+                  IconButton(
+                    icon: Image.asset(() {
+                      switch (device.status) {
+                        case 1:
+                          return 'assets/fire.png';
+                        case 2:
+                          return 'assets/error.png';
+                        default:
+                          return 'assets/circle.png';
+                      }
+                    }()),
+                    onPressed: () {},
+                  ),
+                ),
+              ]))
           .toList();
     }
     return devices
         .map((device) => DataRow(cells: [
-              DataCell(Text(device.title.toString(),
-                  style: Theme.of(context).textTheme.bodySmall)),
+              DataCell(
+                  Text(device.title.toString(),
+                      style: Theme.of(context).textTheme.bodySmall), onTap: () {
+                GoRouter.of(context).go("/device/${device.id}");
+              }),
               DataCell(Text("${device.degrees}°C",
                   style: Theme.of(context).textTheme.bodySmall)),
               DataCell(

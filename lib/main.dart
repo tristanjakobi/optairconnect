@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -186,6 +187,13 @@ final _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final id = state.pathParameters['id']!;
         return MaterialAppWithScaffold(body: DevicePage(id: id));
+      },
+    ),
+    GoRoute(
+      path: '/createdevice/',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = state.pathParameters['id']!;
+        return MaterialAppWithScaffold(body: CreateDevicePage());
       },
     ),
     GoRoute(

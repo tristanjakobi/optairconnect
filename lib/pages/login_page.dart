@@ -29,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
     ))
         .user;
     if (user != null) {
+      await _auth.currentUser!.getIdToken(true);
+
       context.go('/dashboard');
     }
   }
@@ -45,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         pushFCMToken(user.uid);
+        FirebaseAuth.instance.currentUser!.getIdToken(true);
 
         context.go('/dashboard');
       }
@@ -163,7 +166,8 @@ class _RegisterPageState extends State<RegisterPage> {
     ))
         .user;
     if (user != null) {
-      context.go('/devices');
+      await FirebaseAuth.instance.currentUser!.getIdToken(true);
+      context.go('/dashboard');
     }
   }
 
@@ -171,6 +175,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.transparent,
+      elevation: 0,
+      shadowColor: Colors.transparent,
       child: Column(
         children: [
           Text("Registrieren", style: Theme.of(context).textTheme.titleLarge),
