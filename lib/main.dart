@@ -13,6 +13,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'pages/create_device_page.dart';
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
@@ -190,9 +192,8 @@ final _router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/createdevice/',
+      path: '/createdevice',
       builder: (BuildContext context, GoRouterState state) {
-        final id = state.pathParameters['id']!;
         return MaterialAppWithScaffold(body: CreateDevicePage());
       },
     ),

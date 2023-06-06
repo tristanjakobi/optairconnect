@@ -44,6 +44,19 @@ class _DashboardPageState extends State<DashboardPage> {
           Padding(
               padding: const EdgeInsets.only(bottom: 60),
               child: _DeviceTable(widget._dashboardController)),
+          Positioned(
+            bottom: 5,
+            left: 0,
+            right: 0,
+            child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.tertiary,
+                ),
+                onPressed: () {
+                  GoRouter.of(context).go('/createdevice');
+                },
+                child: const Text("Hinzufügen")),
+          )
         ],
       ),
     );
