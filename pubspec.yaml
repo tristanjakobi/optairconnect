@@ -47,6 +47,7 @@ dependencies:
   firebase_messaging: ^14.6.2
   flutter_local_notifications: ^14.1.1
   http: ^0.13.3
+  flutter_blue: ^0.8.0
 
 
 
